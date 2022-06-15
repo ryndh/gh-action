@@ -9001,7 +9001,7 @@ const run = async () => {
     
     const myToken = core.getInput('token');
     const octokit = github.getOctokit(myToken)
-    
+    core.debug(`token ${token}`)
     const { data: pullRequest } = await octokit.rest.pulls.listFiles({
       ...context.repo,
       pull_number: context.number,
