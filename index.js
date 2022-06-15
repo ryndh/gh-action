@@ -10,7 +10,8 @@ const run = async () => {
     const octokit = github.getOctokit(myToken)
     
     const { data: pullRequest } = await octokit.rest.pulls.listFiles({
-      ...context.repository,
+      owner: 'ryndh',
+      repository: 'ryndh/practiceFiles',
       pull_number: context.number,
     });
     console.log(pullRequest)
