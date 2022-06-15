@@ -8997,14 +8997,16 @@ const github = __nccwpck_require__(5438);
 const run = async () => {
   try {
     const context = github.context;
-    // console.log(context);
+    console.log(context);
     
     const myToken = core.getInput('token');
+    const pr = core.getInput('pr');
+    core.debug(pr)
     const octokit = github.getOctokit(myToken)
 
     const { data: pullRequest } = await octokit.rest.pulls.listFiles({
       ...context.repo,
-      pull_number: github.event.number,
+      pull_number: pr,
     });
     console.log(pullRequest)
     console.log('we ran')

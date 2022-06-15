@@ -5,6 +5,10 @@ inputs:
     description: 'GH Token'
     required: true
     default: ${{ github.token }}
+  pr:
+    description: 'which pr it is'
+    required: true
+    default: ${{ github.event.pull_request.number }}
 runs:
   using: 'node16'
   main: 'dist/index.js'
