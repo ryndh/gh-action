@@ -11,7 +11,7 @@ const run = async () => {
 
     const { data: pullRequest } = await octokit.rest.pulls.listFiles({
       ...context.repo,
-      pull_number: context.number,
+      pull_number: github.event.number,
     });
     console.log(pullRequest)
     console.log('we ran')
