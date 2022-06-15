@@ -8994,18 +8994,27 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-} catch (error) {
-  core.setFailed(error.message);
+const run = async () => {
+  try {
+    const context = github.context;
+    // console.log(context);
+    
+    const myToken = core.getInput('token');
+    const octokit = github.getOctokit(myToken)
+    
+    const { data: pullRequest } = await octokit.rest.pulls.get({
+      ...context.repo,
+      repo: context.repository.full_name,
+      pull_number: context.number,
+    });
+    console.log(pullRequest)
+    console.log('we ran')
+    
+  } catch (error) {
+    core.setFailed(error.message);
+  }
 }
+run()
 })();
 
 module.exports = __webpack_exports__;
