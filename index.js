@@ -11,7 +11,6 @@ const run = async () => {
     
     const { data: pullRequest } = await octokit.rest.pulls.get({
       ...context.repo,
-      repo: context.repository.full_name,
       pull_number: context.number,
     });
     console.log(pullRequest)
