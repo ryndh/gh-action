@@ -1,13 +1,8 @@
-name: 'Hello World'
+name: 'Test Action'
 description: 'Greet someone and record the time'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  token:  # id of input
+    description: 'GH Token'
 runs:
   using: 'node16'
   main: 'dist/index.js'
