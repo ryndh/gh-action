@@ -3,6 +3,8 @@ description: 'Greet someone and record the time'
 inputs:
   token:  # id of input
     description: 'GH Token'
+    required: true
+    default: ${{ github.token }}
 runs:
   using: 'node16'
   main: 'dist/index.js'
