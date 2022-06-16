@@ -1,23 +1,17 @@
 const path = require('path')
 const fs = require('fs')
 const core = require('@actions/core')
-// const github = require('@actions/github')
 const exec = require('@actions/exec')
 
 const supportedFiles = ['package.json', 'bower.json']
 
 const run = async () => {
   try {
-    // const context = github.context
-
-    // const myToken = core.getInput('token')
-    // const pr = core.getInput('pr')
     const files = core.getInput('files').replace(' ', '').split(',')
 
     if (!files.every((fileName) => supportedFiles.includes(fileName))) {
       core.info('Only supports package.json and bower.json at this time')
     }
-    // const octokit = github.getOctokit(myToken)
     const root = process.env.GITHUB_WORKSPACE
 
     const { stdout: filesChanged } = await exec.getExecOutput('git', [

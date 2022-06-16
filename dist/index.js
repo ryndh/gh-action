@@ -3434,23 +3434,17 @@ var __webpack_exports__ = {};
 const path = __nccwpck_require__(17)
 const fs = __nccwpck_require__(147)
 const core = __nccwpck_require__(186)
-// const github = require('@actions/github')
 const exec = __nccwpck_require__(514)
 
 const supportedFiles = ['package.json', 'bower.json']
 
 const run = async () => {
   try {
-    // const context = github.context
-
-    // const myToken = core.getInput('token')
-    // const pr = core.getInput('pr')
     const files = core.getInput('files').replace(' ', '').split(',')
 
     if (!files.every((fileName) => supportedFiles.includes(fileName))) {
       core.info('Only supports package.json and bower.json at this time')
     }
-    // const octokit = github.getOctokit(myToken)
     const root = process.env.GITHUB_WORKSPACE
 
     const { stdout: filesChanged } = await exec.getExecOutput('git', [
