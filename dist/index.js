@@ -3463,7 +3463,10 @@ const run = async () => {
     console.log(typeof filesChanged)
     const filesChangedToArray = filesChanged.split('\n')
 
-    const justLocalesChanges = filesChangedToArray.every((filePath) => filePath.includes('locales'))
+    const justLocalesChanges = filesChangedToArray.every((filePath) => {
+      console.log('path', filePath)
+      return filePath.includes('locales')
+    })
 
     if (justLocalesChanges) {
       const parser = {
