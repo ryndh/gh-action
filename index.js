@@ -27,8 +27,7 @@ const run = async () => {
       '--line-prefix=`git rev-parse --show-toplevel`',
     ])
 
-    console.log(typeof filesChanged)
-    const filesChangedToArray = filesChanged.split('\n')
+    const filesChangedToArray = filesChanged.split('\n').filter(Boolean)
 
     const justLocalesChanges = filesChangedToArray.every((filePath) => {
       console.log('path', filePath)
