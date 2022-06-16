@@ -10310,7 +10310,7 @@ const run = async () => {
     // if (onlyLocales) {
 
     // }
-    const filesChanged = await exec.exec('git', ['diff', 'master', '--name-only'])
+    const filesChanged = await exec.exec('git', ['diff', 'origin/master', '--name-only'])
     console.log('changed', filesChanged)
 
     const parser = {
