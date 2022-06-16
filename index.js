@@ -18,6 +18,7 @@ const run = async () => {
     const filesChanged = await exec.exec('git', [
       'diff',
       'origin/master',
+      '--name-only',
       '--line-prefix=`git rev-parse --show-toplevel`',
     ])
     console.log('changed', filesChanged)
