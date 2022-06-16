@@ -3453,9 +3453,9 @@ const run = async () => {
     // const octokit = github.getOctokit(myToken)
     const root = process.env.GITHUB_WORKSPACE
 
-    const filesChanged = await exec.exec('git', [
+    const { stdout: filesChanged } = await exec.getExecOutput('git', [
       'diff',
-      'origin/master',
+      'origin/master...',
       '--name-only',
       '--line-prefix=`git rev-parse --show-toplevel`',
     ])
