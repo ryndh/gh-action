@@ -1,9 +1,16 @@
+// Borrowed a bit of logic from here which was quite helpful: https://github.com/pocket-apps/action-update-version/blob/master/src/main.ts
 const path = require('path')
 const fs = require('fs')
 const core = require('@actions/core')
 const exec = require('@actions/exec')
+const github = require('@actions/github')
 
 const supportedFiles = ['package.json', 'bower.json']
+
+/* TODOS:
+   - See if we can change the name of the PR's to be something more intuitive, ie:  [Translation] Update {list of short locale codes from files changed, ex: “es, de, lv”}
+   - Make compatible with monorepos
+*/
 
 const run = async () => {
   try {
@@ -11,6 +18,7 @@ const run = async () => {
 
     if (!files.every((fileName) => supportedFiles.includes(fileName))) {
       core.info('Only supports package.json and bower.json at this time')
+      return
     }
     const root = process.env.GITHUB_WORKSPACE
 
@@ -24,24 +32,27 @@ const run = async () => {
     const filesChangedToArray = filesChanged.split('\n').filter(Boolean)
 
     const justLocalesChanges = filesChangedToArray.every((filePath) => {
-      console.log('path', filePath)
+      core.info('path', filePath)
       return filePath.includes('locales')
     })
 
     if (justLocalesChanges) {
       const parser = {
         read: JSON.parse,
-        write: (data) => JSON.stringify(data, null, 2),
+        write: (data) => `${JSON.stringify(data, null, 2)}\n`,
       }
 
       core.info('Updating files version field')
+      let newVersion
       files.forEach((file) => {
         const dir = path.join(root, file)
         const buffer = fs.readFileSync(dir, 'utf-8')
 
         const content = parser.read(buffer)
 
-        const newVersion = content.version
+        // Might be a better way to do this.
+        // Will need to be more robust if we ever want it to work with alpha, beta, etc.
+        newVersion = content.version
           .split('.')
           .map((num, i) => {
             if (i !== 2) {
@@ -66,12 +77,31 @@ const run = async () => {
       ])
       await exec.exec('git', ['commit', '-am', `bump version`])
       await exec.exec('git', ['push'])
+      updatePrTitle(newVersion)
     } else {
       core.info('Version was bumped or more than locales files have changed')
     }
   } catch (error) {
     core.setFailed(error.message)
   }
+}
+
+async function updatePrTitle(version) {
+  const token = github.token
+  const pr = github.context.payload.pull_request.number
+  const owner = github.context.repo.owner
+  const repo = github.context.repo.repo
+  const octokit = github.getOctokit(token)
+
+  const req = {
+    owner,
+    repo,
+    pull_number: pr,
+    title: `[Translations] Update translations, bump to version ${version}`,
+    body: '',
+  }
+
+  await octokit.rest.pulls.update(req)
 }
 
 run()
