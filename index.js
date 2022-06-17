@@ -87,7 +87,7 @@ const run = async () => {
 }
 
 async function updatePrTitle(version) {
-  const token = github.token
+  const token = core.getInput('token', { required: true })
   const pr = github.context.payload.pull_request.number
   const owner = github.context.repo.owner
   const repo = github.context.repo.repo
